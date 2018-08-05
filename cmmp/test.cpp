@@ -9,6 +9,9 @@
 #define AE_THREADING AE_SERIAL_UNSAFE
 #include "interpolation.h"
 
+// http://www.alglib.net/translator/man/manual.cpp.html#example_lsfit_d_nlf
+// file:///home/pangi/Facultate/cmmp/cpp/manual.cpp.html#sub_lsfitcreatef
+
 int main()
 {
 
