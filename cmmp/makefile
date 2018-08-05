@@ -1,24 +1,25 @@
 NAMES := test
 
 CXX := g++-7
-CXX_FLAGS := -Wall -Werror -Wextra -std=c++14
+CXX_FLAGS := -std=c++11
 MAKE := make
 
-LIBS :=
-EXTERN_DEPEND := .dlib
-EXTERN := .dlib
+LIBS := -ldlib -lX11 
+EXTERN_DEPEND :=
+EXTERN := 
+CEXTERN :=
 
 INCLUDE := 
 LIB_L := 
 OBJ := 
-SRC := 
+SRC :=
 
 INCLUDE := $(shell find . -type d -not -path '*/\.*') $(INCLUDE)
-INCLUDE := $(INCLUDE) $(EXTERN)
+INCLUDE := $(INCLUDE) $(EXTERN) $(CEXTERN)
 INCLUDE := $(patsubst %, -I%, $(INCLUDE))
 
 LIB_L := $(shell find . -type d -not -path '*/\.*') $(LIB_L)
-LIB_L := $(LIB_L) $(EXTERN)
+LIB_L := $(LIB_L) $(EXTERN) $(CEXTERN)
 LIB_L := $(patsubst %, -L%, $(LIB_L))
 
 _SRC := $(shell find . -type f -name '*.cpp' -not -path '*/\.*')
@@ -32,7 +33,7 @@ OBJ := $(patsubst %.cpp, %.o, $(SRC)) $(OBJ)
 all: $(NAMES)
 
 $(NAMES):%:%.cpp $(EXTERN_DEPEND) $(OBJ) $(NAMES_O)
-	$(CXX) $(INCLUDE) $(LIB_L) $(LIBS) $(OBJ) $(CXX_FLAGS) $< -o $@
+	$(CXX) $(INCLUDE) $(LIB_L) $(OBJ) $(LIBS) $(CXX_FLAGS) $< -o $@
 
 $(NAMES_O):
 

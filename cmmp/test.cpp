@@ -1,12 +1,23 @@
 #include <iostream>
+#include "stdafx.h"
 #include <fstream>
 #include "cmmp.h"
 #include "test.h"
 #include "json.h"
 #include "parse.h"
+#define AE_NO_EXCEPTIONS
+#define AE_THREADING AE_SERIAL_UNSAFE
+#include "interpolation.h"
 
 int main()
 {
+
+	std::vector<double> va {1., 2., 3., 4., 5., 6., 7., 8., 9., 10.};
+	alglib::real_1d_array x;
+	x.setcontent(10, &va[0]);
+
+	// lsfitcreatef()
+
 	nlohmann::json data;
 	std::ifstream("data.json") >> data;
 
