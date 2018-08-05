@@ -1,1 +1,1 @@
-test.o: test.cpp cmmp.h test.h
+test.o: test.cpp cmmp.h test.h json.h parse.h exprtk.h
