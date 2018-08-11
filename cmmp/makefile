@@ -1,10 +1,10 @@
 NAMES := test
 
 CXX := g++-7
-CXX_FLAGS := -std=c++11
+CXX_FLAGS := -std=c++11 -g
 MAKE := make
 
-LIBS := -ldlib -lX11 
+LIBS := 
 EXTERN_DEPEND :=
 EXTERN := 
 CEXTERN :=
