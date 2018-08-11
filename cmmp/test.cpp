@@ -2,8 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
-#include "cmmp.h"
-#include "test.h"
+#include "solver.h"
 #include "parse.h"
 
 int main()
@@ -11,8 +10,10 @@ int main()
 	auto solvers = solver::from_json("data.json");
 
 	try {
-		for (auto&& solv : solvers)
-			std::cout << solv.solve_to_str(solv.solve()) << std::endl;
+		for (auto&& solv : solvers) {
+			solv.solve();
+			std::cout << solv.str_result() << std::endl;
+		}
 	}
 	catch (alglib::ap_error& err) {
 		std::cout << err.msg << std::endl;

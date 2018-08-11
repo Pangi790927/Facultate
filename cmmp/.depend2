@@ -1,5 +1,4 @@
-test.o: test.cpp cpp/src/stdafx.h cmmp.h json.h parse.h exprtk.h \
- cpp/src/interpolation.h cpp/src/ap.h cpp/src/alglibinternal.h \
- cpp/src/alglibmisc.h cpp/src/linalg.h cpp/src/solvers.h \
- cpp/src/optimization.h cpp/src/specialfunctions.h cpp/src/integration.h \
- test.h
+test.o: test.cpp cpp/src/stdafx.h solver.h cpp/src/interpolation.h \
+ cpp/src/ap.h cpp/src/alglibinternal.h cpp/src/alglibmisc.h \
+ cpp/src/linalg.h cpp/src/solvers.h cpp/src/optimization.h \
+ cpp/src/specialfunctions.h cpp/src/integration.h parse.h exprtk.h
