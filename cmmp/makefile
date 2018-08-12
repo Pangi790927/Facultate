@@ -1,12 +1,12 @@
 NAMES := test
 
 CXX := g++-7
-CXX_FLAGS := -std=c++11 -g
+CXX_FLAGS := -std=c++17 -g
 MAKE := make
 
-LIBS := 
-EXTERN_DEPEND :=
-EXTERN := 
+LIBS := -lGLEW -lGLU -lGL -lX11
+EXTERN_DEPEND := 
+EXTERN := ../Window ../Misc ../Math4f
 CEXTERN :=
 
 INCLUDE := 
@@ -33,7 +33,7 @@ OBJ := $(patsubst %.cpp, %.o, $(SRC)) $(OBJ)
 all: $(NAMES)
 
 $(NAMES):%:%.cpp $(EXTERN_DEPEND) $(OBJ) $(NAMES_O)
-	$(CXX) $(INCLUDE) $(LIB_L) $(OBJ) $(LIBS) $(CXX_FLAGS) $< -o $@
+	$(CXX) $(INCLUDE) $(LIB_L) $(OBJ) $(CXX_FLAGS) $< -o $@ $(LIBS)
 
 $(NAMES_O):
 

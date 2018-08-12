@@ -1,4 +1,8 @@
 test.o: test.cpp cpp/src/stdafx.h solver.h cpp/src/interpolation.h \
  cpp/src/ap.h cpp/src/alglibinternal.h cpp/src/alglibmisc.h \
  cpp/src/linalg.h cpp/src/solvers.h cpp/src/optimization.h \
- cpp/src/specialfunctions.h cpp/src/integration.h parse.h exprtk.h
+ cpp/src/specialfunctions.h cpp/src/integration.h parse.h exprtk.h \
+ ../Window/OpenglWindow.h ../Window/Options.h ../Window/LinuxWindow.h \
+ ../Window/Keyboard.h ../Misc/Util.h ../Window/Mouse.h \
+ ../Math4f/MathLib.h ../Math4f/Matrix.h ../Math4f/MatrixHelper.h \
+ ../Math4f/MatrixSolver.h

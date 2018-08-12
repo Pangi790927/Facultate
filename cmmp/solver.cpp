@@ -25,6 +25,7 @@ solver::solver (const std::string& expr,
 		throw std::runtime_error("solver: empty in names");
 	if (params.empty())
 		throw std::runtime_error("solver: empty params names");
+	last_sol = std::vector<double>(params.size());
 }
 
 void solver::stat_callback(const alglib::real_1d_array &c,
@@ -83,6 +84,18 @@ std::vector<double> solver::solve() {
 	return last_sol;
 }
 
+double solver::_eval_at (const std::vector<double>& x) {
+	std::vector<std::pair<std::string, double>> par;
+	if (x.size() != in.size())
+		return std::nan("");
+
+	for (int i = 0; i < params.size(); i++)
+		par.push_back(std::make_pair(params[i], last_sol[i]));
+	for (int i = 0; i < in.size(); i++)
+		par.push_back(std::make_pair(in[i], x[i]));
+	return util::eval_expr(expr, par);
+}
+
 std::string solver::str_result() {
 	std::stringstream ss;
 
@@ -124,6 +137,17 @@ std::vector<solver> solver::from_json (const std::string& jname) {
 			params.push_back(elem.get<std::string>());
 
 		solvers.push_back(solver(expr, in, params, data_x, data_y, out));
+
+		if (solv.find("color") == solv.end()) {
+			solvers.back().r = 1;
+			solvers.back().g = 1;
+			solvers.back().b = 1;
+		}
+		else {
+			solvers.back().r = solv["color"]["r"].get<double>();
+			solvers.back().g = solv["color"]["g"].get<double>();
+			solvers.back().b = solv["color"]["b"].get<double>();
+		}
 	}
 	return solvers;
 }

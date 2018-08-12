@@ -23,6 +23,9 @@ struct solver {
 
 	std::vector<double> last_sol;
 	bool hadError = false;
+	float r;
+	float g;
+	float b;
 
 	solver (const std::string& expr,
 			const std::vector<std::string>& in,
@@ -35,8 +38,18 @@ struct solver {
 	void callback(const alglib::real_1d_array &c,
 			const alglib::real_1d_array& x, double &res);
 	std::vector<double> solve();
+	double _eval_at (const std::vector<double>& x);
 	std::string str_result();
 	static std::vector<solver> from_json (const std::string& jname);
+
+	template <typename Type>
+	double eval_at (Type&& arg, int count) {
+		std::vector<double> value(count);
+
+		for (int i = 0; i < count; i++)
+			value[i] = arg[i];
+		_eval_at(value);
+	}
 };
 
 

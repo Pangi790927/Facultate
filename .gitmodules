@@ -1,3 +1,9 @@
 [submodule "Window"]
 	path = Window
 	url = git@github.com:Pangi790927/Window.git
+[submodule "Misc"]
+	path = Misc
+	url = git@github.com:Pangi790927/Misc.git
+[submodule "Math4f"]
+	path = Math4f
+	url = git@github.com:Pangi790927/Math4f.git
