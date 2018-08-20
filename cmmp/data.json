@@ -1,53 +1,78 @@
 {
-	"data" : [
-		{ "in" : [6.50], "out" : 0.53},
-		{ "in" : [4.86], "out" : 0.78},
-		{ "in" : [3.23], "out" : 0.85},
-		{ "in" : [1.61], "out" : 0.80},
-		{ "in" : [0.95], "out" : 0.75},
-		{ "in" : [0.79], "out" : 0.83},
-		{ "in" : [0.64], "out" : 0.68},
-		{ "in" : [0.48], "out" : 0.67},
-		{ "in" : [0.32], "out" : 0.68},
-		{ "in" : [0.24], "out" : 0.83},
-		{ "in" : [0.16], "out" : 0.70},
-		{ "in" : [0.08], "out" : 0.72}
-	],
-	"aprox" : [
-		{
+	"aprox" : {
+		"ec1" : {
 			"expr" : "uMax * S / (Ks + Kd + S)",
 			"params" : ["uMax", "Ks", "Kd"],
 			"in" : ["S"],
 			"out" : "u(S)",
-			"color" : {"r" : 1.0, "g" : 0.0, "b" : 0.0}
+			"color" : {"r" : 1.0, "g" : 0.0, "b" : 0.0},
+			"iter" : 10000
 		},
-		{
+		"ec2" : {
 			"expr" : "uMax * (1 - exp(-S / Ks))",
 			"params" : ["uMax", "Ks"],
 			"in" : ["S"],
 			"out" : "u(S)",
-			"color" : {"r" : 0.0, "g" : 1.0, "b" : 0.0}
+			"color" : {"r" : 1.0, "g" : 1.0, "b" : 0.0},
+			"iter" : 10000
 		},
-		{
+		"ec3" : {
 			"expr" : "uMax * S / (Ks + S) - Kis * (S - Sc)",
 			"params" : ["uMax", "Ks", "Kis", "Sc"],
 			"in" : ["S"],
 			"out" : "u(S)",
-			"color" : {"r" : 0.0, "g" : 0.0, "b" : 1.0}
+			"color" : {"r" : 1.0, "g" : 0.0, "b" : 1.0},
+			"iter" : 10000
 		},
-		{
+		"ec4" : {
 			"expr" : "uMax * S^n / (Ks + S^n)",
 			"params" : ["uMax", "Ks", "n"],
 			"in" : ["S"],
 			"out" : "u(S)",
-			"color" : {"r" : 1.0, "g" : 1.0, "b" : 0.0}
+			"color" : {"r" : 0.0, "g" : 1.0, "b" : 1.0},
+			"iter" : 10000
 		},
-		{
+		"ec5" : {
 			"expr" : "a * x + b",
 			"params" : ["a", "b"],
 			"in" : ["x"],
 			"out" : "f(x)",
-			"color" : {"r" : 1.0, "g" : 0.0, "b" : 1.0}
+			"color" : {"r" : 0.0, "g" : 1.0, "b" : 0.0},
+			"iter" : 10000
+		}
+	},
+	"data_sets" : {
+		"set1" : "dataset_1.data",
+		"set2" : "dataset_2.data"
+	},
+	"windows" : [
+		{
+			"name" : "test ec1 ec2 ec3",
+			"outfile" : "test1.res",
+			"width" : 500,
+			"height" : 500,
+			"dataset" : "set1",
+			"aprox" : [
+				"ec1", "ec2", "ec3"
+			]
+		},
+		{
+			"name" : "will test ec4, ec5",
+			"outfile" : "test2.res",
+			"width" : 500,
+			"height" : 500,
+			"dataset" : "set2",
+			"aprox" : [
+				"ec4", "ec5"
+			]
+		},
+		{
+			"name" : "",
+			"width" : 123,
+			"height" : 43,
+			"outfile" : "result.res",
+			"dataset" : "set2",
+			"aprox" : ["ec3"]
 		}
 	]
 }

@@ -1,0 +1,23 @@
+# this is a comment, '#' must appear at the beggining of the line
+
+# empty lines are allowed
+
+# each line is composed as such:
+# in_1 in_2 in_3 ... in_n out_1
+
+# this is a data line: {1, 2, 3, 4} are inputs and 5 is output
+1 2 3 4 5
+
+# all data lines must have the same number of inputs and an output, so the
+# next line is valid:
+   1.3245    123.321 123 0 -7534.123
+
+# but this one wouldn't be valid (note: it is commented because it
+# would give an error):
+# 1 2 3 4
+
+# more invalid lines (imagine the first # is not there):
+ # comment must be at the beggining of the file !!!
+1 2 3 4 5 6
+1,2,3,4,5
+1,2 1.2 3 4 5

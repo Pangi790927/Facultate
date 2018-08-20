@@ -3,6 +3,32 @@
 
 namespace util
 {
+	void evaluator_t::init (const std::string& expr,
+			const std::vector<std::pair<std::string, double>>& values)
+	{
+		this->expr = expr;
+
+		for (int i = 0; i < values.size(); i++)
+			vals.push_back(values[i].second);
+
+		for (int i = 0; i < values.size(); i++) {
+			symbol_table.add_variable(values[i].first, vals[i]);
+		}
+
+		symbol_table.add_constants();
+		expression.register_symbol_table(symbol_table);
+		parser.compile(expr, expression);
+	}
+
+	double evaluator_t::eval(
+			const std::vector<std::pair<std::string, double>>& values)
+	{
+		for (int i = 0; i < values.size(); i++)
+			vals[i] = values[i].second;
+
+		return expression.value();
+	}
+
 	double eval_expr (const std::string& expr,
 			const std::vector<std::pair<std::string, double>>& values)
 	{

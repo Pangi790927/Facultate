@@ -1,24 +1,13 @@
 #include "solver.h"
-#include "json.h"
 #include "parse.h"
-
 // strange bug detected, sometimes the value is not detected correctly
 
 solver::solver (const std::string& expr,
 		const std::vector<std::string>& in,
 		const std::vector<std::string>& params,
-		const std::vector<std::vector<double>>& data_x,
-		const std::vector<double>& data_y,
 		const std::string& out = "f(x)")
-: expr(expr), in(in), out(out), params(params),
-		data_x(data_x), data_y(data_y)
+: expr(expr), in(in), out(out), params(params)
 {
-	if (data_x.empty())
-		throw std::runtime_error("solver: empty data_x array");
-	if (data_x[0].empty())
-		throw std::runtime_error("solver: no components");
-	if (data_y.empty())
-		throw std::runtime_error("solver: empty data_y array");
 	if (expr.empty())
 		throw std::runtime_error("solver: empty expr");
 	if (in.empty())
@@ -26,6 +15,13 @@ solver::solver (const std::string& expr,
 	if (params.empty())
 		throw std::runtime_error("solver: empty params names");
 	last_sol = std::vector<double>(params.size());
+
+	std::vector<std::pair<std::string, double>> par;
+	for (int i = 0; i < params.size(); i++)
+		par.push_back(std::make_pair(params[i], 0));
+	for (int i = 0; i < in.size(); i++)
+		par.push_back(std::make_pair(in[i], 0));
+	evaluator.init(expr, par);
 }
 
 void solver::stat_callback(const alglib::real_1d_array &c,
@@ -45,29 +41,30 @@ void solver::callback(const alglib::real_1d_array &c,
 	for (int i = 0; i < in.size(); i++)
 		par.push_back(std::make_pair(in[i], x[i]));
 
-	res = util::eval_expr(expr, par);
+	res = evaluator.eval(par);
 }
 
-std::vector<double> solver::solve() {
+std::vector<double> solver::solve (const solver_data& data) {
 	using namespace alglib;
 
-	real_2d_array x;
-	x.setlength(data_x.size(), data_x[0].size());
-	
-	for (int i = 0; i < data_x.size(); i++)
-		for (int j = 0; j < data_y.size(); j++)
-				x[i][j] = data_x[i][j];
-
-	real_1d_array y;
-	y.setcontent(data_y.size(), &data_y[0]);
-
 	param_val.setlength(params.size());
+	real_1d_array lower_bound;
+	real_1d_array upper_bound;
+
+	lower_bound.setlength(params.size());
+	upper_bound.setlength(params.size());
+
+	for (int i = 0; i < params.size(); i++)
+		lower_bound[i] = 0.0000000001;
+	for (int i = 0; i < params.size(); i++)
+		upper_bound[i] = fp_posinf;
 
 	double diff_step = 0.0001;
-	lsfitcreatef(x, y, param_val, diff_step, state);
+	lsfitcreatef(data.x, data.y, param_val, diff_step, state);
 
 	double epsx = 0.000001;
 	lsfitsetcond(state, epsx, maxits);
+	lsfitsetbc(state, lower_bound, upper_bound);
 	lsfitfit(state, stat_callback, NULL, (void *)this);
 	lsfitresults(state, info, param_val, rep);
 
@@ -93,7 +90,7 @@ double solver::_eval_at (const std::vector<double>& x) {
 		par.push_back(std::make_pair(params[i], last_sol[i]));
 	for (int i = 0; i < in.size(); i++)
 		par.push_back(std::make_pair(in[i], x[i]));
-	return util::eval_expr(expr, par);
+	return evaluator.eval(par);
 }
 
 std::string solver::str_result() {
@@ -107,47 +104,37 @@ std::string solver::str_result() {
 	return ss.str();
 }
 
-std::vector<solver> solver::from_json (const std::string& jname) {
-	nlohmann::json jdata;
-	std::ifstream(jname.c_str()) >> jdata;
+std::shared_ptr<solver> solver::from_json (nlohmann::json& jdata) {
+	std::string expr = jdata["expr"].get<std::string>();
+	std::string out = jdata["out"].get<std::string>();
+	std::vector<std::string> in;
+	std::vector<std::string> params;
 
-	std::vector<solver> solvers;
+	for (auto&& elem : jdata["in"])
+		in.push_back(elem.get<std::string>());
 
-	std::vector<std::vector<double>> data_x;
-	std::vector<double> data_y;
+	for (auto&& elem : jdata["params"])
+		params.push_back(elem.get<std::string>());
 
-	for (auto&& pair : jdata["data"]) {
-		data_x.push_back(std::vector<double>());
-		for (auto&& x : pair["in"])
-			data_x.back().push_back(x.get<double>());
+	std::shared_ptr<solver> solv = std::shared_ptr<solver>(
+		new solver(expr, in, params, out)
+	);
 
-		data_y.push_back(pair["out"].get<double>());
+	if (jdata.find("iter") == jdata.end())
+		solv->maxits = 1000;
+	else
+		solv->maxits = jdata["iter"];	
+
+	if (jdata.find("color") == jdata.end()) {
+		solv->r = 1;
+		solv->g = 1;
+		solv->b = 1;
+	}
+	else {
+		solv->r = jdata["color"]["r"].get<double>();
+		solv->g = jdata["color"]["g"].get<double>();
+		solv->b = jdata["color"]["b"].get<double>();
 	}
 
-	for (auto&& solv : jdata["aprox"]) {
-		std::string expr = solv["expr"].get<std::string>();
-		std::string out = solv["out"].get<std::string>();
-		std::vector<std::string> in;
-		std::vector<std::string> params;
-
-		for (auto&& elem : solv["in"])
-			in.push_back(elem.get<std::string>());
-
-		for (auto&& elem : solv["params"])
-			params.push_back(elem.get<std::string>());
-
-		solvers.push_back(solver(expr, in, params, data_x, data_y, out));
-
-		if (solv.find("color") == solv.end()) {
-			solvers.back().r = 1;
-			solvers.back().g = 1;
-			solvers.back().b = 1;
-		}
-		else {
-			solvers.back().r = solv["color"]["r"].get<double>();
-			solvers.back().g = solv["color"]["g"].get<double>();
-			solvers.back().b = solv["color"]["b"].get<double>();
-		}
-	}
-	return solvers;
+	return solv;
 }
