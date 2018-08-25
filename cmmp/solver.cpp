@@ -78,6 +78,18 @@ std::vector<double> solver::solve (const solver_data& data) {
 			hadError = true;
 		}
 	}
+
+	mae = 0;
+	for (int i = 0; i < data.x.rows(); i++)
+		mae += std::fabs(data.y[i] - eval_at(data.x[i], data.x.cols()));
+	mae /= (double)data.x.rows();
+
+	rmse = 0;
+	for (int i = 0; i < data.x.rows(); i++)
+		rmse += std::pow(data.y[i] - eval_at(data.x[i], data.x.cols()), 2);
+	rmse /= (double)data.x.rows();
+	rmse = sqrt(rmse);
+
 	return last_sol;
 }
 
@@ -101,6 +113,8 @@ std::string solver::str_result() {
 		ss << "\t" << "Results are invalid: " << int(info) << std::endl;
 	for (int i = 0; i < last_sol.size(); i++)
 		ss << "\t" << params[i] << ": " << last_sol[i] << std::endl;
+	ss << "mae: " << mae << std::endl;
+	ss << "rmse: " << rmse << std::endl; 
 	return ss.str();
 }
 

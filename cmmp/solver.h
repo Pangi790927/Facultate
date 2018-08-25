@@ -24,6 +24,9 @@ struct solver {
 	alglib::ae_int_t maxits = 10000;
 
 	std::vector<double> last_sol;
+	double mae;
+	double rmse;
+	
 	util::evaluator_t evaluator;
 	bool hadError = false;
 	float r;

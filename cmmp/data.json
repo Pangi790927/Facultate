@@ -49,6 +49,7 @@
 		{
 			"name" : "test ec1 ec2 ec3",
 			"outfile" : "test1.res",
+			"stdout" : true,
 			"width" : 500,
 			"height" : 500,
 			"dataset" : "set1",
@@ -59,6 +60,7 @@
 		{
 			"name" : "will test ec4, ec5",
 			"outfile" : "test2.res",
+			"stdout" : true,
 			"width" : 500,
 			"height" : 500,
 			"dataset" : "set2",
@@ -71,6 +73,7 @@
 			"width" : 123,
 			"height" : 43,
 			"outfile" : "result.res",
+			"stdout" : false,
 			"dataset" : "set2",
 			"aprox" : ["ec3"]
 		}

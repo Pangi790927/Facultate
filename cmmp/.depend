@@ -1,4 +1,6 @@
 solver.o: solver.cpp solver.h cpp/src/interpolation.h cpp/src/ap.h \
  cpp/src/alglibinternal.h cpp/src/alglibmisc.h cpp/src/linalg.h \
  cpp/src/solvers.h cpp/src/optimization.h cpp/src/specialfunctions.h \
- cpp/src/integration.h json.h parse.h exprtk.h
+ cpp/src/integration.h parse.h exprtk.h solver_data.h ../Math4f/MathLib.h \
+ ../Math4f/Matrix.h ../Math4f/MatrixHelper.h ../Math4f/MatrixSolver.h \
+ json.h

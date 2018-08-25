@@ -65,8 +65,19 @@ int main(int argc, char const *argv[])
 			else
 				outname = jwindow["outfile"];
 			std::ofstream out(outname.c_str());
+			
+			if (jwindow["stdout"]) {
+				std::cout << "---------------------------------------------"
+						"-----------------------------------" << std::endl;
+				std::cout << "### " << outname << ": ###" << std::endl;
+				std::cout << "---------------------------------------------"
+						"-----------------------------------" << std::endl;
+			}
 			for (auto&& solv : windows.back()->aprox) {
 				out << solv->str_result() << std::endl;
+				if (jwindow["stdout"]) {
+					std::cout << solv->str_result() << std::endl;
+				}
 			}
 		}
 	}

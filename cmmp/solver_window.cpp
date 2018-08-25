@@ -61,14 +61,15 @@ void solver_window::draw() {
 	
 	for (auto&& solv : aprox) {
 		glColor3f(solv->r, solv->g, solv->b);
-		plot(
-			[&] (double x) -> double {
-				return solv->eval_at(std::vector<double>{x}, 1);
-			},
-			dataset->botLeft,
-			dataset->topRight,
-			1000
-		);
+		if (!solv->hadError)
+			plot(
+				[&] (double x) -> double {
+					return solv->eval_at(std::vector<double>{x}, 1);
+				},
+				dataset->botLeft,
+				dataset->topRight,
+				1000
+			);
 		glBegin (GL_POINTS);
 			glColor3f(1, 1, 1);
 			for (int i = 0; i < dataset->x.rows(); i++) {

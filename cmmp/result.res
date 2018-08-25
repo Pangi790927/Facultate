@@ -4,4 +4,6 @@ u(S) = uMax * S / (Ks + S) - Kis * (S - Sc)
 	Ks: nan
 	Kis: nan
 	Sc: nan
+mae: nan
+rmse: nan
 
